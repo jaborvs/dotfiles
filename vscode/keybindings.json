@@ -1,0 +1,114 @@
+[
+  // ============================================================================
+  // EDITOR — Suggestions & Quick Open Navigation
+  // ============================================================================
+
+  // Autocomplete navigation
+  {
+    "key": "alt+j",
+    "command": "selectNextSuggestion",
+    "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
+  },
+  {
+    "key": "alt+k",
+    "command": "selectPrevSuggestion",
+    "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
+  },
+
+  // Quick Open navigation (Ctrl+P menu)
+  {
+    "key": "alt+j",
+    "command": "workbench.action.quickOpenSelectNext",
+    "when": "inQuickOpen"
+  },
+  {
+    "key": "alt+k",
+    "command": "workbench.action.quickOpenSelectPrevious",
+    "when": "inQuickOpen"
+  },
+  {
+    "key": "alt+q",
+    "command": "workbench.action.quickOpen"
+  },
+
+  // ============================================================================
+  // SIDEBAR — Toggle & View Switching
+  // ============================================================================
+
+  // Explorer toggle: open if closed, collapse if focused
+  {
+    "key": "alt+e",
+    "command": "workbench.view.explorer",
+    "when": "!sideBarFocus"
+  },
+  {
+    "key": "alt+e",
+    "command": "workbench.action.toggleSidebarVisibility",
+    "when": "sideBarFocus"
+  },
+
+  // Switch to Extensions
+  {
+    "key": "alt+x",
+    "command": "workbench.view.extensions"
+  },
+
+  // Switch to Git / Source Control
+  {
+    "key": "alt+g",
+    "command": "workbench.view.scm"
+  },
+
+  // Switch to Search
+  {
+    "key": "alt+f",
+    "command": "workbench.view.search"
+  },
+
+  // ============================================================================
+  // SIDEBAR — Navigation (Vim‑style list movement)
+  // ============================================================================
+
+  {
+    "key": "k",
+    "command": "list.focusUp",
+    "when": "listFocus && !inputFocus"
+  },
+  {
+    "key": "j",
+    "command": "list.focusDown",
+    "when": "listFocus && !inputFocus"
+  },
+
+  // ============================================================================
+  // SIDEBAR — File Operations (Explorer)
+  // ============================================================================
+
+  // New file
+  {
+    "key": "a",
+    "command": "explorer.newFile",
+    "when": "sideBarFocus && !inputFocus"
+  },
+
+  // Delete file
+  {
+    "key": "d",
+    "command": "deleteFile",
+    "when": "sideBarFocus && !inputFocus"
+  },
+
+  // Rename file
+  {
+    "key": "r",
+    "command": "renameFile",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+
+  // New folder
+  {
+    "key": "ctrl+a",
+    "command": "explorer.newFolder",
+    "when": "sideBarFocus"
+  }
+]
