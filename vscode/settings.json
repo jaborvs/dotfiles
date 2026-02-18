@@ -1,0 +1,84 @@
+{
+    // ============================
+    // Editor Settings
+    // ============================
+    "editor.minimap.enabled": false,
+    "editor.autoIndent": "none",
+    "editor.fontFamily": "'JetBrains Mono', Consolas, 'Courier New', monospace",
+    "editor.renderWhitespace": "all",
+    "editor.tabSize": 2,
+
+    // ============================
+    // Workbench UI
+    // ============================
+    "workbench.activityBar.location": "bottom",
+    "workbench.editor.showTabs": "single",
+    "workbench.editor.limit.enabled": true,
+    "workbench.editor.limit.perEditorGroup": true,
+    "workbench.editor.limit.value": 1,
+    "workbench.layoutControl.enabled": false,
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
+    "workbench.colorTheme": "Tokyo Night",
+    "workbench.iconTheme": "material-icon-theme",
+
+    // ============================
+    // Window & Display
+    // ============================
+    "window.commandCenter": false,
+    "window.menuBarVisibility": "toggle",
+    "zenMode.showTabs": "single",
+
+    // ============================
+    // Terminal Settings
+    // ============================
+    "terminal.integrated.fontFamily": "JetBrains Mono",
+    "terminal.integrated.defaultProfile.windows": "Ubuntu (WSL)",
+    "terminal.integrated.profiles.windows": {
+        "PowerShell": {
+            "source": "PowerShell",
+            "icon": "terminal-powershell"
+        },
+        "Command Prompt": {
+            "path": [
+                "${env:windir}\\Sysnative\\cmd.exe",
+                "${env:windir}\\System32\\cmd.exe"
+            ],
+            "args": [],
+            "icon": "terminal-cmd"
+        },
+        "Git Bash": {
+            "source": "Git Bash"
+        },
+        "Ubuntu (WSL)": {
+            "path": "C:\\WINDOWS\\System32\\wsl.exe",
+            "args": [
+                "-d",
+                "Ubuntu"
+            ]
+        }
+    },
+
+    // ============================
+    // Autosave & Files
+    // ============================
+    "files.autoSave": "onWindowChange",
+    "files.eol": "\n",
+
+    // ============================
+    // Git Settings
+    // ============================
+    "git.autofetch": true,
+    "git.autofetchPeriod": 5,
+    "git.confirmSync": false,
+    "git.enableSmartCommit": true,
+
+    // ============================
+    // Explorer & Security
+    // ============================
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "security.workspace.trust.untrustedFiles": "open",
+    "security.allowedUNCHosts": [
+        "wsl.localhost"
+    ]
+}
