@@ -27,10 +27,10 @@ input "1133:45108:Logitech_MX_Master_3S" {
 #### Idle #####################################################################
 
 exec_always "killall -q swayidle; swayidle -w \
-    timeout 60 'swaylock -i /home/jaborvs/Pictures/wallpapers/frame_85.png' \
+    timeout 60 'swaylock -i /home/jaborvs/Pictures/wallpapers/frame_106.png' \
     timeout 120 'swaymsg output \"*\" power off' \
     resume 'swaymsg output \"*\" power on' \
-    before-sleep 'swaylock -i /home/jaborvs/Pictures/wallpapers/frame_85.png'"
+    before-sleep 'swaylock -i /home/jaborvs/Pictures/wallpapers/frame_106.png'"
 
 ### Status bar ################################################################
 
