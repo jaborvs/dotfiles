@@ -14,7 +14,7 @@ The color palette is built on deep blacks, subtle grays, and warm, earthy accent
 | :--- | :--- | :--- |
 | **Background** | Deep Onyx | `#101010` |
 | **Background (Alt)** | Raised Gray | `#252525` |
-| **Borders** | Subtle Outline | `#333333` |
+| **Borders** | Subtle Outline | `#303030` |
 | **Foreground** | Warm White | `#f6f1ea` |
 | **Accent** | Midcentury Wood | `#afa193` |
 
