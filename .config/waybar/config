@@ -1,0 +1,97 @@
+{
+    "layer": "bottom",
+    "position": "top",
+    "height": 30,
+    "spacing": 0,
+    "modules-left": ["sway/workspaces","sway/mode"],
+    "modules-center": [],
+    "modules-right": [
+        "cpu", 
+        "memory", 
+        "disk", 
+        "temperature", 
+        "pulseaudio", 
+        "backlight", 
+        "network", 
+        "battery", 
+        "sway/language",
+        "custom/clock",
+        "tray"
+    ],
+
+    "sway/workspaces": {
+        "disable-scroll": true,
+        "format": "<span color='#252525'>[ </span>{icon}{name}<span color='#252525'> ]</span>",
+        "format-icons": {
+            "default": "",
+            "urgent": "!",
+            "focused": "*"
+        }
+    },
+
+    "sway/mode": {
+        "format": "  {}"
+    },
+
+    "cpu": {
+        "format": "<span color='#252525'>[ </span><span color='#afa193'><b>cpu:</b></span> {usage}%",
+        "interval": 5
+    },
+
+    "memory": {
+        "format": "<span color='#252525'> / </span><span color='#afa193'><b>mem:</b></span> {percentage}%",
+        "interval": 5
+    },
+
+    "disk": {
+        "format": "<span color='#252525'> / </span><span color='#afa193'><b>dsk:</b></span> {percentage_used}%",
+        "interval": 20,
+        "path": "/"
+    },
+
+    "temperature": {
+        "format": "<span color='#252525'> / </span><span color='#afa193'><b>tmp:</b></span> {temperatureC}°C",
+        "interval": 5
+    },
+
+    "pulseaudio": {
+        "format": "<span color='#252525'> / </span><span color='#afa193'><b>vol:</b></span> {volume}%",
+        "format-muted": "<span color='#252525'> / </span><span color='#afa193'><b>vol:</b></span> {volume}% (m)"
+    },
+
+    "backlight": {
+        "format": "<span color='#252525'> / </span><span color='#afa193'><b>bri:</b></span> {percent}%",
+        "tooltip": false
+    },
+
+    "network": {
+        "format-wifi": "<span color='#252525'> / </span><span color='#afa193'><b>wif:</b></span> {essid}",
+        "format-ethernet": "<span color='#252525'> / </span><span color='#afa193'><b>eth:</b></span> up",
+        "format-disconnected": "<span color='#252525'> / </span><span color='#afa193'><b>net:</b></span> down",
+        "tooltip": false
+    },
+
+    "battery": {
+        "format": "<span color='#252525'> / </span><span color='#afa193'><b>bat:</b></span> {capacity}%",
+        "format-charging": "<span color='#252525'> / </span><span color='#afa193'><b>ac:</b></span> {capacity}%",
+        "tooltip": false,
+        "interval": 20
+    },
+
+    "sway/language": {
+        "format": "<span color='#252525'> / </span><span color='#afa193'><b>key:</b></span> {short}",
+        "tooltip": false
+    },
+
+    "custom/clock": {
+        "format": "<span color='#252525'> / </span>{}<span color='#252525'> ]</span>",
+        "exec": "date +'%H:%M %A, %b %d' | awk '{print tolower($0)}'",
+        "interval": 3
+    },
+
+    "tray": {
+        "icon-size": 20,
+        "spacing": 7,
+        "tooltip": false
+    }
+}

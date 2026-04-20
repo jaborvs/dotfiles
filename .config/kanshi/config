@@ -1,0 +1,15 @@
+#
+# @desc Minimal kanshi monitor setup
+# @auth jaborvs
+#
+
+# Profile for laptop only setup
+profile laptop {
+    output eDP-1 enable
+}
+
+# Profile for home setup
+profile home {
+    output eDP-1 disable
+    output HDMI-A-1 enable
+}

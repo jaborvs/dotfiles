@@ -1,0 +1,85 @@
+#
+# @desc Sway minimal configuration for productivity
+# @auth jaborvs
+#
+
+### Includes ##################################################################
+
+# Default configuration
+include /etc/sway/config.d/*
+
+# Custom configuration
+include ~/.config/sway/settings
+include ~/.config/sway/keybinds
+
+### Output ####################################################################
+
+# Wallpaper
+output * bg ~/Pictures/wallpapers/frame_85.png fill
+
+### Input #####################################################################
+
+input "1133:45108:Logitech_MX_Master_3S" {
+    accel_profile "flat"
+    pointer_accel 0
+}
+
+#### Idle #####################################################################
+
+exec_always "killall -q swayidle; swayidle -w \
+    timeout 60 'swaylock -i /home/jaborvs/Pictures/wallpapers/frame_85.png' \
+    timeout 120 'swaymsg output \"*\" power off' \
+    resume 'swaymsg output \"*\" power on' \
+    before-sleep 'swaylock -i /home/jaborvs/Pictures/wallpapers/frame_85.png'"
+
+### Status bar ################################################################
+
+bar {
+    position top
+
+    swaybar_command waybar
+
+    icon_theme $icon_theme
+
+    colors {
+        statusline $fg
+        background $bg
+        #                   border  bg      text
+        focused_workspace   $accent $accent $bg
+        inactive_workspace  $bg     $bg     $fg
+        urgent_workspace    $bg     $bg     $fg
+    }
+}
+
+
+### Containers ################################################################
+
+gaps inner 10
+gaps outer 0
+default_border pixel 1
+default_floating_border pixel 1
+titlebar_padding 10 3
+titlebar_border_thickness 1
+
+client.background       $bg
+
+set $border_gray #303030
+
+# class                 border       backgr.  text    indicator child_border
+client.focused          $accent      $bg_alt  $fg     $accent   $accent
+client.focused_inactive $border_gray $bg_alt  $fg     $border_gray $border_gray
+client.unfocused        $border_gray $bg_alt  $fg     $border_gray $border_gray
+client.urgent           $bg_alt      $bg_alt  $fg     $bg_alt   $bg_alt
+client.placeholder      $bg_alt      $bg_alt  $fg     $bg_alt   $bg_alt
+
+### Autostart #################################################################
+
+# xdg (screenshare)
+exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+exec_always "killall -q xdg-desktop-portal-wlr xdg-desktop-portal; /usr/lib/xdg-desktop-portal-wlr & sleep 1; /usr/lib/xdg-desktop-portal"
+
+# mako (notification)
+exec_always pkill mako; mako
+
+# kanshi (displays)
+exec_always pkill kanshi; kanshi

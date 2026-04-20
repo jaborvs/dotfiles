@@ -1,0 +1,21 @@
+# Terminal emulator
+# set $term alacritty
+set $term kitty
+
+# Application launcher
+set $menu 'rofi -show drun'
+
+# Web browser
+set $web 'flatpak run io.gitlab.librewolf-community'
+
+# Colors
+set $accent #afa193
+set $bg #101010
+set $bg_alt #252525
+set $fg #f6f1ea
+
+# GTK theme settings
+set $icon_theme "Papirus-Dark"
+
+# Font
+font pango: JetBrainsMono Nerd Font 10
