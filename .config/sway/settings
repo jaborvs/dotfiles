@@ -13,6 +13,7 @@ set $accent #afa193
 set $bg #101010
 set $bg_alt #252525
 set $fg #f6f1ea
+set $border_gray #303030
 
 # GTK theme settings
 set $icon_theme "Papirus-Dark"

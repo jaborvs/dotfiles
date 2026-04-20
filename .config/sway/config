@@ -15,7 +15,7 @@ include ~/.config/sway/keybinds
 ### Output ####################################################################
 
 # Wallpaper
-output * bg ~/Pictures/wallpapers/frame_85.png fill
+output * bg ~/Pictures/wallpapers/frame_106.png fill
 
 ### Input #####################################################################
 
@@ -62,8 +62,6 @@ titlebar_padding 10 3
 titlebar_border_thickness 1
 
 client.background       $bg
-
-set $border_gray #303030
 
 # class                 border       backgr.  text    indicator child_border
 client.focused          $accent      $bg_alt  $fg     $accent   $accent
