@@ -1,5 +1,8 @@
 ### Oh My Zsh Configuration ###################################################
 
+# Set ssh agent identities
+zstyle :omz:plugins:ssh-agent identities jaborvs_ed25519
+
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -14,6 +17,7 @@ plugins=(
   fzf
   zsh-autosuggestions
   zsh-syntax-highlighting
+  ssh-agent
 )
 
 # Load Oh My Zsh
