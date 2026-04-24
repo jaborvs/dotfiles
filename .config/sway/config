@@ -29,6 +29,10 @@ input "9306:33398:Rainy_75-1_Keyboard" {
     xkb_variant ",intl"
 }
 
+input "1739:52542:MSFT0001:01_06CB:CD3E_Touchpad" {
+    natural_scroll disabled
+}
+
 #### Idle #####################################################################
 
 exec_always "killall -q swayidle; swayidle -w \
