@@ -181,7 +181,7 @@ bindsym XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
 # --- Brightness ---
 
 # Decrease brightness
-bindsym --locked xf86mONbrightnessDown exec $script_dir/brightness-decrease
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 # Increase brightness
-bindsym --locked XF86MonBrightnessUp exec $script_dir/brightness-increase
+bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
 
