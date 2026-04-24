@@ -30,7 +30,7 @@ input "9306:33398:Rainy_75-1_Keyboard" {
 }
 
 input "1739:52542:MSFT0001:01_06CB:CD3E_Touchpad" {
-    natural_scroll disabled
+    natural_scroll enabled
 }
 
 #### Idle #####################################################################
