@@ -51,6 +51,9 @@ bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. 
 # mouse button for dragging.
 floating_modifier $mod normal
 
+# Change keyboard layout
+bindsym $mod+Tab input "9306:33398:Rainy_75-1_Keyboard" xkb_switch_layout next
+
 # --- Movements ---
 
 # Move your focus around

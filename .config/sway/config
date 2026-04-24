@@ -24,6 +24,11 @@ input "1133:45108:Logitech_MX_Master_3S" {
     pointer_accel 0
 }
 
+input "9306:33398:Rainy_75-1_Keyboard" {
+    xkb_layout "us,us"
+    xkb_variant ",intl"
+}
+
 #### Idle #####################################################################
 
 exec_always "killall -q swayidle; swayidle -w \
