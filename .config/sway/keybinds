@@ -24,7 +24,7 @@ bindsym $mod+Return exec $term
 bindsym $mod+d exec $menu
 
 # Start your browser
-# WIP
+bindsym $mod+g exec google-chrome
 
 # Lock your session
 bindsym $mod+x exec $lock

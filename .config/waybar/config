@@ -58,7 +58,7 @@
         "format": "<span color='#252525'> / </span><span color='#afa193'><b>vol:</b></span> {volume}%",
         "format-muted": "<span color='#252525'> / </span><span color='#afa193'><b>vol:</b></span> {volume}% (m)"
     },
-
+    
     "backlight": {
         "format": "<span color='#252525'> / </span><span color='#afa193'><b>bri:</b></span> {percent}%",
         "tooltip": false
@@ -88,7 +88,7 @@
         "exec": "date +'%H:%M %A, %b %d' | awk '{print tolower($0)}'",
         "interval": 3
     },
-
+    
     "tray": {
         "icon-size": 20,
         "spacing": 7,

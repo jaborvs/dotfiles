@@ -1,8 +1,3 @@
-#
-# @desc Minimal mako notification configuration
-# @auth jaborvs
-#
-
 ### Global Settings ###########################################################
 font=JetBrainsMono Nerd Font 10
 background-color=#101010

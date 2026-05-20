@@ -1,0 +1,19 @@
+configuration {
+    /* Core Settings */
+    modi: "drun";
+    terminal: "kitty";
+    font: "JetBrainsMono Nerd Font 12";
+
+    /* Icons and Formatting */
+    show-icons: true;
+    icon-theme: "Papirus";
+    drun-display-format: "<span text_transform='lowercase'>{name}</span>";
+
+    /* Sidebar Labels */
+    display-drun: "󰀻 app:";
+
+    /* Search Behavior */
+    matching: "fuzzy";
+}
+
+@theme "/home/jaborvs/.config/rofi/themes/minimal.rasi"

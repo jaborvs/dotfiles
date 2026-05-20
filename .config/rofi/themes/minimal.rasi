@@ -1,0 +1,76 @@
+* {
+    /* Your color palette */
+    accent: #afa193;
+    fg:     #f6f1ea;
+    bg:     #101010;
+    bg-alt: #252525;
+
+    /* Global defaults */
+    background-color: transparent;
+    text-color:       @fg;
+    margin:           0;
+    padding:          0;
+    spacing:          0;
+}
+
+window {
+    background-color: @bg;
+    border:           2px;
+    border-color:     @bg-alt;
+    padding:          15px;
+    width:            500px;
+    location:         center;
+    anchor:           center;
+}
+
+mainbox {
+    children: [ inputbar, listview ];
+    spacing:  10px;
+}
+
+/* --- Search Bar --- */
+inputbar {
+    background-color: @bg-alt;
+    padding:          10px;
+    children:         [ prompt, entry ];
+}
+
+prompt {
+    text-color:       @accent;
+    font-weight:      900;
+    margin:           0px 10px 0px 0px;
+}
+
+entry {
+    text-color:       @fg;
+    placeholder:      "search...";
+    placeholder-color:#777777; /* Subtle grey just for the placeholder text */
+}
+
+/* --- Results List --- */
+listview {
+    columns:          1;
+    lines:            8;
+    fixed-height:     true;
+}
+
+element {
+    padding:          8px 10px;
+    spacing:          15px;
+}
+
+element-text {
+    background-color: inherit;
+    text-color:       inherit;
+}
+
+element-icon {
+    size:             1.2em;
+    background-color: inherit;
+}
+
+/* Selected item styling */
+element selected {
+    background-color: @bg-alt;
+    text-color:       @accent;
+}
