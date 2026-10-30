@@ -1,0 +1,36 @@
+#!/bin/bash
+# mic-test [seconds] — records the Blue Snowball raw and through "Snowball Podcast"
+# at the same time, then plays both so you can compare.
+# Files: ~/Music/mic-test/<timestamp>-{original,podcast}.wav
+set -euo pipefail
+
+secs=${1:-10}
+raw=alsa_input.usb-BLUE_MICROPHONE_Blue_Snowball_797_2019_11_12_10744-00.pro-input-0
+pod=snowball_podcast
+dir=$(xdg-user-dir MUSIC 2>/dev/null || echo "$HOME/Music")/mic-test
+stamp=$(date +%Y%m%d-%H%M%S)
+mkdir -p "$dir"
+f_raw="$dir/$stamp-original.wav"
+f_pod="$dir/$stamp-podcast.wav"
+
+for n in "$raw" "$pod"; do
+    pw-cli ls Node | grep -q "node.name = \"$n\"" || { echo "No encuentro el nodo $n (¿micro enchufado? ¿systemctl --user status filter-chain?)" >&2; exit 1; }
+done
+
+echo "Grabando ${secs}s. Habla a 10-15 cm, de frente al micro..."
+for i in 3 2 1; do echo "  $i"; sleep 1; done
+echo "  ¡Ya!"
+timeout "$secs" pw-record --target "$raw" --rate 48000 --channels 1 --format s24 "$f_raw" &>/dev/null &
+timeout "$secs" pw-record --target "$pod" --rate 48000 --channels 1 --format s24 "$f_pod" &>/dev/null &
+wait || true
+[ -s "$f_raw" ] && [ -s "$f_pod" ] || { echo "La grabación falló (archivo vacío)." >&2; exit 1; }
+
+echo "Reproduciendo PODCAST (procesado)..."
+pw-play "$f_pod"
+sleep 0.5
+echo "Reproduciendo ORIGINAL (sin procesar)..."
+pw-play "$f_raw"
+echo
+echo "Guardado en:"
+echo "  $f_pod"
+echo "  $f_raw"
