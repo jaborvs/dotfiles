@@ -1,0 +1,12 @@
+[gpg]
+	format = ssh
+[user]
+	signingkey = ~/.ssh/id_ed25519
+	email = borja.velascosantamaria@canonical.com
+	name = Borja Velasco Santamaria
+[commit]
+	gpgsign = true
+[core]
+	editor = nvim
+[init]
+	defaultBranch = main

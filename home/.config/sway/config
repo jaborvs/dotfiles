@@ -17,6 +17,12 @@ include ~/.config/sway/keybinds
 # Wallpaper
 output * bg ~/Pictures/wallpapers/frame_106.png fill
 
+# Monitor layout: AOC (HDMI-A-1) centered above Asus (DP-1)
+# Asus XG27ACS: 2560x1440 at bottom
+output DP-1 resolution 2560x1440 position 0,1080
+# AOC 24G2W1G4: 1920x1080 centered above Asus → x=(2560-1920)/2=320, y=0
+output HDMI-A-1 resolution 1920x1080 position 320,0
+
 ### Input #####################################################################
 
 input "1133:45108:Logitech_MX_Master_3S" {
@@ -24,22 +30,22 @@ input "1133:45108:Logitech_MX_Master_3S" {
     pointer_accel 0
 }
 
-input "9306:33398:Rainy_75-1_Keyboard" {
+input type:keyboard {
     xkb_layout "us,us"
-    xkb_variant ",intl"
+    xkb_variant "intl,"
+    xkb_options "lv3:switch"
 }
 
-input "1739:52542:MSFT0001:01_06CB:CD3E_Touchpad" {
+input type:touchpad {
     natural_scroll enabled
+    tap enabled
 }
 
 #### Idle #####################################################################
 
 exec_always "killall -q swayidle; swayidle -w \
-    timeout 60 'swaylock -i /home/jaborvs/Pictures/wallpapers/frame_106.png' \
-    timeout 120 'swaymsg output \"*\" power off' \
-    resume 'swaymsg output \"*\" power on' \
-    before-sleep 'swaylock -i /home/jaborvs/Pictures/wallpapers/frame_106.png'"
+    timeout 180 'swaylock' \
+    before-sleep 'swaylock'"
 
 ### Status bar ################################################################
 
@@ -83,7 +89,7 @@ client.placeholder      $bg_alt      $bg_alt  $fg     $bg_alt   $bg_alt
 
 # xdg (screenshare)
 exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
-exec_always "killall -q xdg-desktop-portal-wlr xdg-desktop-portal; /usr/lib/xdg-desktop-portal-wlr & sleep 1; /usr/lib/xdg-desktop-portal"
+exec_always "killall -q xdg-desktop-portal-wlr xdg-desktop-portal-gtk xdg-desktop-portal; sleep 1; /usr/libexec/xdg-desktop-portal-wlr & sleep 1; /usr/libexec/xdg-desktop-portal-gtk & sleep 1; /usr/libexec/xdg-desktop-portal --replace"
 
 # mako (notification)
 exec_always pkill mako; mako

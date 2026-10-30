@@ -4,7 +4,7 @@
 @define-color bg-alt #252525;
 
 * {
-    font-size: 12px;
+    font-size: 10px;
     min-height: 0;
 }
 
@@ -19,18 +19,34 @@ window#waybar {
     color: @accent;
 }
 
-#language,
-#pulseaudio,
+#custom-volume,
 #battery,
 #backlight,
-#custom-clock,
 #cpu,
 #memory,
 #disk,
 #temperature,
+#language,
 #network {
     font-family: "JetBrainsMono Nerd Font", monospace;
     color: @fg;
+    padding: 0 0 1px 0;
+}
+
+#custom-pomodoro {
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    color: @fg;
+    padding: 0 0 1px 0;
+}
+
+#custom-pomodoro.break {
+    color: @accent;
+}
+
+#custom-clock {
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    color: @fg;
+    padding: 0 0 1px 0;
 }
 
 #workspaces {
@@ -58,15 +74,28 @@ window#waybar {
     font-weight: bold;
 }
 
+#custom-layout {
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    color: @fg;
+    padding: 0 0 1px 0;
+}
+
+#custom-power {
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    color: @accent;
+    font-weight: bold;
+    padding: 0 6px 1px 0;
+}
+
 #tray {
     font-family: "Ubuntu";
     padding-left: 10px;
 }
 
 .modules-left {
-    padding-left: 10px; /* Pushes the left side away from the border */
+    padding-left: 5px;
 }
 
 .modules-right {
-    padding-right: 10px; /* Pushes the right side away from the border */
+    padding-right: 5px;
 }

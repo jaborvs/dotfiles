@@ -1,0 +1,55 @@
+# swaylock-effects configuration
+# Colors aligned with sway theme:
+#   bg:         #101010
+#   bg_alt:     #252525
+#   fg:         #f6f1ea
+#   accent:     #afa193
+#   border_gray #303030
+
+# Blurred screenshot as background
+screenshots
+effect-blur=7x5
+effect-vignette=0.3:0.5
+
+font=JetBrainsMono Nerd Font
+
+# Clock
+clock
+timestr=[%H:%M]
+datestr=[ %a, %d %b ]
+
+indicator
+indicator-radius=60
+indicator-thickness=6
+
+
+# Ring — warm accent / border tones
+ring-color=303030
+ring-ver-color=afa193
+ring-wrong-color=303030
+ring-clear-color=303030
+
+# Key highlight on ring
+key-hl-color=afa193
+bs-hl-color=f6f1ea
+
+# Inside of indicator — matches bg/bg_alt
+inside-color=10101099
+inside-ver-color=25252599
+inside-wrong-color=10101099
+inside-clear-color=10101099
+
+# Text — always fg
+text-color=f6f1ea
+text-ver-color=f6f1ea
+text-wrong-color=f6f1ea
+text-clear-color=f6f1ea
+
+# No separator line
+line-color=00000000
+line-ver-color=00000000
+line-wrong-color=00000000
+line-clear-color=00000000
+
+show-failed-attempts
+daemonize

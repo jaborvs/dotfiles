@@ -1,6 +1,7 @@
 # Terminal emulator
 # set $term alacritty
-set $term /home/jaborvs/.local/bin/kitty
+set $term foot
+
 
 # Application launcher
 set $menu 'rofi -show drun'

@@ -1,0 +1,20 @@
+# Profile for dual external monitors (ASUS DP-1 + AOC HDMI-A-1)
+# Layout: AOC centered above Asus
+# Asus: 2560x1440 at bottom (0,0)
+# AOC:  1920x1080 centered above → x=(2560-1920)/2=320, y=-1080
+profile dual-external {
+    output "ASUSTek COMPUTER INC XG27ACS *" enable mode 2560x1440@144Hz position 0,0
+    output "AOC 24G2W1G4 *" enable transform 180 mode 1920x1080@144Hz position 320,-1080
+    output "China Star Optoelectronics Technology Co., Ltd MNE007ZA3-2 *" disable
+} 
+
+# Profile for AOC external monitor only
+profile aoc-only {
+    output "AOC 24G2W1G4 *" enable transform 180 mode 1920x1080@144Hz position 0,0
+    output "China Star Optoelectronics Technology Co., Ltd MNE007ZA3-2 *" disable
+}
+
+# Profile for laptop only setup
+profile laptop {
+    output eDP-1 enable
+}

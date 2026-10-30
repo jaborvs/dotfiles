@@ -1,0 +1,67 @@
+### Global Settings ###########################################################
+font=JetBrainsMono Nerd Font 10
+background-color=#101010
+text-color=#f6f1ea
+border-color=#303030
+progress-color=over #afa193
+
+# Layout
+anchor=top-right
+width=300
+height=110
+margin=10
+padding=10
+border-size=2
+border-radius=0
+
+# Behavior
+icons=1
+max-icon-size=48
+default-timeout=5000
+ignore-timeout=1
+
+# Sound: same for every notification (per-app overrides below)
+on-notify=exec pw-play ~/.local/share/sounds/modern-minimal-ui/stereo/message-new-instant.oga
+
+# Mouse: left = dismiss, right = snooze 5 min (comes back critical, see scripts/snooze.sh)
+on-button-left=dismiss
+on-button-right=exec ~/.config/mako/scripts/snooze.sh "$id"
+
+### Urgency Levels & Overrides ################################################
+
+# Low Urgency
+# Uses your accent color for the text to make it subtle
+[urgency=low]
+border-color=#303030
+text-color=#afa193
+
+# High Urgency (Critical battery, system errors)
+# Uses a new, muted red so it stands out but isn't blinding
+[urgency=high]
+border-color=#cc6666
+default-timeout=0
+
+# Custom Matching (Example: Scripts or Logs)
+# Uses a muted gold for specific app names or summaries
+[summary~="log-.*"]
+border-color=#d8a657
+
+# Calendar reminders (Chrome): live "hace mm:ss" counter + re-remind if dismissed early
+# see scripts/reminder.sh
+[app-name="Google Chrome"]
+on-notify=exec ~/.config/mako/scripts/reminder.sh
+
+[desktop-entry=google-chrome]
+on-notify=exec ~/.config/mako/scripts/reminder.sh
+
+# Pomodoro phase change: its own sound
+[app-name=waybar-module-pomodoro]
+on-notify=exec pw-play ~/.local/share/sounds/modern-minimal-ui/stereo/completion-success.oga
+
+# Live counter replacements (reminder.sh): silent here, the script plays the sound itself
+[app-name=calendar-reminder]
+on-notify=none
+
+# Mattermost plays its own sound: keep mako silent for it
+[app-name=Mattermost]
+on-notify=none
