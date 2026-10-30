@@ -1,0 +1,87 @@
+setupVersion: 2
+theme:
+  dark: midcentury-dark
+colorBlindMode: false
+symbolPreset: unicode
+statusLine:
+  preset: custom
+  separator: pipe
+  transparent: true
+  sessionAccent: false
+  compactThinkingLevel: false
+  leftSegments:
+    - model
+    - cost
+    - context_pct
+    - usage
+  rightSegments:
+    - path
+    - git
+  segmentOptions:
+    model:
+      showThinkingLevel: true
+    git:
+      showBranch: true
+      showStaged: false
+      showUnstaged: false
+      showUntracked: false
+tui:
+  textSizing: false
+display:
+  showTokenUsage: true
+  shimmer: classic
+composer:
+  shape: field
+defaultThinkingLevel: medium
+hideThinkingBlock: true
+modelRoles:
+  default: anthropic/claude-opus-5-5:high
+tools:
+  approvalMode: always-ask
+  artifactSpillThreshold: 20
+  artifactTailBytes: 20
+  artifactHeadBytes: 20
+shell:
+  useShellcheck: true
+  maxOutputTokens: 6000
+browser:
+  headless: true
+vault:
+  enabled: false
+task:
+  softRequestBudget: 40
+compaction:
+  thresholdTokens: 200000
+  methodOrder:
+    - remote
+    - snapcompact
+    - soft
+lsp:
+  servers:
+    terraform:
+      command:
+        - terraform-ls
+        - serve
+      filetypes:
+        - tf
+        - tfvars
+        - terragrunt.hcl
+    python:
+      command:
+        - basedpyright-langserver
+        - "--stdio"
+      filetypes:
+        - py
+    bash:
+      command:
+        - bash-language-server
+        - start
+      filetypes:
+        - sh
+        - bash
+  options:
+    blockOnDiagnosticsErrors: true
+dev:
+  autoqaConsent: granted
+claudeResets:
+  autoRedeem: "yes"

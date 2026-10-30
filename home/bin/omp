@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+# Wrapper de omp: fuerza TODO el trafico de red de omp (y sus subprocesos,
+# incluidos los workers __omp_worker_* y los servidores MCP) a salir por el
+# proxy HTTP de Dalinar via Tailscale. El resto del sistema no se toca.
+#
+# El binario real (~/.local/bin/omp) se autoactualiza solo: por eso este
+# wrapper vive en un directorio aparte (~/bin), antes en el PATH, y nunca
+# se sobrescribe ni se mezcla con el binario real.
+#
+# Fallo cerrado: si Dalinar/el proxy no responde, omp NO arranca.
+# Bypass deliberado: OMP_DIRECT=1 omp ...   (en casa, o si Dalinar esta caido)
+
+set -euo pipefail
+
+REAL_OMP="$HOME/.local/bin/omp"
+PROXY_NODE="dalinar"          # nodo Tailscale; su IP se resuelve al arrancar
+PROXY_PORT="8888"
+PROBE_URL="https://api.ipify.org"
+
+if [ ! -x "$REAL_OMP" ]; then
+    echo "ERROR: no se encuentra el binario real de omp en $REAL_OMP" >&2
+    exit 1
+fi
+
+# El autoactualizador de omp localiza "su" binario buscando `omp` en el PATH
+# y sobrescribe el primero que encuentra. Si ~/bin sigue en el PATH, ese
+# primero es ESTE wrapper: el 2026-10-15 la actualizacion a 18.11.0 lo piso y
+# omp salio directo, sin proxy. Quitar ~/bin del PATH del proceso real hace
+# que el actualizador encuentre ~/.local/bin/omp. Los subprocesos de omp no
+# necesitan el wrapper: heredan las variables de proxy de abajo.
+WRAPPER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PATH="$(printf '%s' "$PATH" | tr ':' '\n' | grep -vxF "$WRAPPER_DIR" | paste -sd: -)"
+export PATH
+
+if [ -n "${OMP_DIRECT:-}" ]; then
+    exec "$REAL_OMP" "$@"
+fi
+
+# `tailscale ip` consulta al tailscaled local: no depende de MagicDNS ni de
+# --accept-dns, y sigue funcionando si la IP del nodo cambia.
+if ! PROXY_HOST="$(tailscale ip -4 "$PROXY_NODE" 2>/dev/null)" || [ -z "$PROXY_HOST" ]; then
+    echo "ERROR: no se pudo resolver la IP Tailscale de ${PROXY_NODE} (tailscale ip -4 ${PROXY_NODE})." >&2
+    echo "       omp NO se ha arrancado (fallo cerrado) para evitar fugas de red." >&2
+    echo "       Si quieres saltarte el proxy a proposito: OMP_DIRECT=1 omp $*" >&2
+    exit 1
+fi
+PROXY_URL="http://${PROXY_HOST}:${PROXY_PORT}"
+
+if ! curl -s -o /dev/null --connect-timeout 3 --max-time 6 -x "$PROXY_URL" "$PROBE_URL"; then
+    echo "ERROR: Dalinar/el proxy (${PROXY_HOST}:${PROXY_PORT}) no responde." >&2
+    echo "       omp NO se ha arrancado (fallo cerrado) para evitar fugas de red." >&2
+    echo "       Comprueba: tailscale status | grep dalinar" >&2
+    echo "                  ssh dalinar systemctl status tinyproxy" >&2
+    echo "       Si quieres saltarte el proxy a proposito (en casa, o Dalinar caido):" >&2
+    echo "         OMP_DIRECT=1 omp $*" >&2
+    exit 1
+fi
+
+export HTTPS_PROXY="$PROXY_URL"
+export HTTP_PROXY="$PROXY_URL"
+export ALL_PROXY="$PROXY_URL"
+export https_proxy="$PROXY_URL"
+export http_proxy="$PROXY_URL"
+export all_proxy="$PROXY_URL"
+export NO_PROXY="localhost,127.0.0.1,::1"
+export no_proxy="localhost,127.0.0.1,::1"
+# omp ignora HTTPS_PROXY en las llamadas a proveedores (p. ej. Anthropic usa un
+# transporte node:https propio); solo lee PI_PROXY / PI_PROXY_<PROVIDER>
+# (ffe() en packages/ai/src/utils/transport-fetch.ts del binario).
+export PI_PROXY="$PROXY_URL"
+
+exec "$REAL_OMP" "$@"

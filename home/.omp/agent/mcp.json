@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "context-mode": {
+      "command": "${HOME}/.local/bin/context-mode"
+    }
+  }
+}
