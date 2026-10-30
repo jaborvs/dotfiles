@@ -246,18 +246,10 @@ if [ "$mode" = "deps" ] || [ "$mode" = "all" ]; then
         ln -sf "${THEME_DIR}/minimal.zsh" "${ZSH_CUSTOM}/themes/minimal.zsh-theme"
     fi
 
-    # --- Flatpak + LibreWolf (optional, skip on failure) ---
+    # --- Flathub remote (optional, skip on failure) ---
     echo ">>> Setting up Flathub..."
     $SUDO flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo || \
         echo "WARNING: Could not add Flathub, skipping Flatpak setup."
-
-    if flatpak list 2>/dev/null | grep -qi librewolf; then
-        echo ">>> LibreWolf already installed, skipping."
-    else
-        echo ">>> Installing LibreWolf via Flatpak..."
-        flatpak install -y flathub io.gitlab.librewolf-community || \
-            echo "WARNING: LibreWolf installation failed, skipping."
-    fi
 
     # --- Pinned user binaries in ~/.local (checksums verified against upstream releases) ---
     echo ">>> Installing user binaries into ~/.local..."
