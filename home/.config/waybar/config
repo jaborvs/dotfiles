@@ -77,10 +77,10 @@
 
     "battery": {
         "format": "<span color='#252525'> / </span><span color='#afa193'><b>bat:</b></span> {capacity}%",
-        "format-charging": "<span color='#252525'> / </span><span color='#afa193'><b>bat:</b></span> {capacity}% <span color='#afa193'></span>",
-        "format-plugged": "<span color='#252525'> / </span><span color='#afa193'><b>bat:</b></span> {capacity}% <span color='#afa193'></span>",
-        "format-not-charging": "<span color='#252525'> / </span><span color='#afa193'><b>bat:</b></span> {capacity}% <span color='#afa193'></span>",
-        "format-full": "<span color='#252525'> / </span><span color='#afa193'><b>bat:</b></span> {capacity}% <span color='#afa193'></span>",
+        "format-charging": "<span color='#252525'> / </span><span color='#afa193'><b>bat:</b></span> {capacity}% <span color='#afa193'>󱐌</span>",
+        "format-plugged": "<span color='#252525'> / </span><span color='#afa193'><b>bat:</b></span> {capacity}% <span color='#afa193'>󱐌</span>",
+        "format-not-charging": "<span color='#252525'> / </span><span color='#afa193'><b>bat:</b></span> {capacity}% <span color='#afa193'>󱐌</span>",
+        "format-full": "<span color='#252525'> / </span><span color='#afa193'><b>bat:</b></span> {capacity}% <span color='#afa193'>󱐌</span>",
         "tooltip": false,
         "interval": 1
     },
