@@ -414,7 +414,7 @@ fi
 echo "=== Done ==="
 echo ""
 echo "Restore by hand (secrets, never in this repo):"
-echo "  - ~/.ssh/id_ed25519 and id_ed25519.pub (chmod 600 the private key)"
+echo "  - SSH key: plug in the YubiKey, then: cd ~/.ssh && ssh-keygen -K  (PIN; recreates id_ed25519_sk_rk_kaladin)"
 echo "  - ~/.local/share/totp/*.age and ~/.config/totp/recipient"
 echo ""
 case "$mode" in

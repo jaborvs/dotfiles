@@ -1,7 +1,7 @@
 [gpg]
 	format = ssh
 [user]
-	signingkey = ~/.ssh/id_ed25519
+	signingkey = ~/.ssh/id_ed25519_sk_rk_kaladin
 	email = borja.velascosantamaria@canonical.com
 	name = Borja Velasco Santamaria
 [commit]
