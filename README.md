@@ -59,6 +59,7 @@ Run it as your normal user; it calls `sudo` where needed and every step can be r
 Secrets stay out:
 
 * **SSH and commit signing key:** an `ed25519-sk` resident key on the YubiKey, so there is nothing to back up. On a new machine, plug in the key and run `cd ~/.ssh && ssh-keygen -K` (asks for the FIDO PIN) to recreate `id_ed25519_sk_rk_kaladin`. There is no ssh-agent: every connection and every signed commit asks for a fingerprint on the key.
+* **OpenDev (temporary):** `review.opendev.org` runs Gerrit 3.13, whose Apache MINA 2.16 rejects FIDO signatures that carry the user-verified flag (this YubiKey always sets it). It gets its own passphrase-protected `~/.ssh/id_ed25519_opendev`, which is not backed up: on a new machine, generate a new one and register it in Gerrit. Drop it once OpenDev runs Gerrit 3.14 or later.
 * `~/.local/share/totp/*.age` and `~/.config/totp/recipient`: restore from a private backup.
 
 `~/bin/omp` sends omp's traffic through an HTTP proxy on a Tailscale node, found at startup with `tailscale ip -4 dalinar`. It refuses to start if the proxy is unreachable; `OMP_DIRECT=1 omp` bypasses it.
