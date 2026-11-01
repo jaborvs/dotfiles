@@ -35,7 +35,7 @@ composer:
 defaultThinkingLevel: medium
 hideThinkingBlock: true
 modelRoles:
-  default: openrouter/anthropic/claude-opus-5.5:high
+  default: anthropic/claude-opus-5-5:high
 tools:
   approvalMode: always-ask
   artifactSpillThreshold: 20
