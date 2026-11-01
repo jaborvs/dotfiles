@@ -82,7 +82,7 @@
         "format-not-charging": "<span color='#252525'> / </span><span color='#afa193'><b>bat:</b></span> {capacity}% <span color='#afa193'></span>",
         "format-full": "<span color='#252525'> / </span><span color='#afa193'><b>bat:</b></span> {capacity}% <span color='#afa193'></span>",
         "tooltip": false,
-        "interval": 20
+        "interval": 3
     },
 
     "sway/language": {
