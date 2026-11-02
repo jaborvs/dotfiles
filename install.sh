@@ -265,12 +265,13 @@ if [ "$mode" = "deps" ] || [ "$mode" = "all" ]; then
     fi
     ln -sfn "$SHARE/nvim-$NVIM_VERSION/bin/nvim" "$BIN/nvim"
 
-    if ! has_sha "$BIN/age-plugin-fido2-hmac" 89821f7c88af9d097173ce08efc1754e7020b5920cd125f1aacd52f4848aa9fe; then
-        fetch "$GH/olastor/age-plugin-fido2-hmac/releases/download/v0.5.0/age-plugin-fido2-hmac-v0.5.0-linux-amd64.tar.gz" \
-            f837ee7eea5a94c33366b7a78cd143a2a64a1cbae8532b58f16335ca05cccc92 "$TMP/age-fido2.tar.gz"
-        tar -xzf "$TMP/age-fido2.tar.gz" -C "$TMP"
-        install -m755 "$TMP/age-plugin-fido2-hmac/age-plugin-fido2-hmac" "$BIN/"
+    # totp lives in its own public repo; link it so edits land there. Its installer pins the age plugin.
+    TOTP_DIR="$(dirname "$SCRIPT_DIR")/totp"
+    if [ ! -d "$TOTP_DIR/.git" ]; then
+        git clone -q https://github.com/jaborvs/totp.git "$TOTP_DIR"  # https: no SSH key yet on a new machine
+        git -C "$TOTP_DIR" remote set-url --push origin git@github.com:jaborvs/totp.git
     fi
+    "$TOTP_DIR/install.sh" --link
 
     if ! has_sha "$BIN/stylua" 81d7a816a52f89a4e5b39709c4597b47e184916a2c86037bfecfb6c5b21a6fc7; then
         fetch "$GH/JohnnyMorganz/StyLua/releases/download/v2.5.2/stylua-linux-x86_64.zip" \

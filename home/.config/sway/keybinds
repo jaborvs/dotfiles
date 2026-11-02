@@ -33,8 +33,8 @@ bindsym $mod+e exec swaylock
 bindsym $mod+p exec grim -g "$(slurp -d)" - | tee ~/Pictures/screenshots/$(date +%Y%m%d-%H%M%S).png | wl-copy
 
 # TOTP codes (YubiKey): copy, or type with Shift
-bindsym $mod+o exec ~/.local/bin/totp pick
-bindsym $mod+Shift+t exec ~/.local/bin/totp pick --type
+bindsym $mod+o exec env TOTP_PROMPT='󰯄 totp:' ~/.local/bin/totp pick
+bindsym $mod+Shift+t exec env TOTP_PROMPT='󰯄 totp:' ~/.local/bin/totp pick --type
 
 # Special keys to adjust brightness via brightnessctl
 # WINDOW COLORS

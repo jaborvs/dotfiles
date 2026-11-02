@@ -31,7 +31,7 @@ Critical alerts and the terminal use muted tones in the same spirit, such as `#c
 | Displays | kanshi |
 | Editor | Neovim 0.12 with lazy.nvim |
 | Audio | PipeWire and WirePlumber, with a filter chain for a Blue Snowball mic |
-| 2FA | `totp`: codes from age files unlocked by a YubiKey, also published as [jaborvs/totp](https://github.com/jaborvs/totp) |
+| 2FA | [totp](https://github.com/jaborvs/totp): codes from age files unlocked by a YubiKey. It has its own repo; the installer clones it next to this one and links `~/.local/bin/totp` to it. |
 | Coding agent | omp: config, theme, extensions and skills |
 | Font | JetBrainsMono Nerd Font |
 | Icons and GTK | Papirus icons, Yaru GTK theme (dark, brown accent) |
@@ -52,7 +52,7 @@ Run it as your normal user. It calls `sudo` where it needs to, and every step ca
 | 2 | Deploy the dotfiles |
 | 3 | Both; use this on a new machine |
 
-The dependencies are apt packages, the Chrome, Tailscale, NodeSource and HashiCorp apt repos, a few snaps, swaylock-effects and Oh My Zsh. Neovim, LuaLS, StyLua, shfmt, tree-sitter, age-plugin-fido2-hmac, uv, omp and context-mode go to `~/.local`. Every download is pinned to a version and checked against its SHA-256.
+The dependencies are apt packages, the Chrome, Tailscale, NodeSource and HashiCorp apt repos, a few snaps, swaylock-effects and Oh My Zsh. Neovim, LuaLS, StyLua, shfmt, tree-sitter, uv, omp and context-mode go to `~/.local`. Every download is pinned to a version and checked against its SHA-256. totp is cloned into `../totp` and installed with its own `install.sh --link`, which also brings age-plugin-fido2-hmac.
 
 Deploying links everything under `home/` into `~` with [GNU Stow](https://www.gnu.org/software/stow/), file by file (`--no-folding`). Files already in the way are moved to `~/.dotfiles-backup-<date>/` first. Then it applies the GTK theme and enables the filter-chain user service.
 
