@@ -65,8 +65,3 @@ on-notify=none
 # Mattermost plays its own sound: keep mako silent for it
 [app-name=Mattermost]
 on-notify=none
-
-# YubiKey touch prompt (yubikey-touch-detector): stays until the key is touched,
-# then the detector closes it itself
-[app-name=yubikey-touch-detector]
-default-timeout=0

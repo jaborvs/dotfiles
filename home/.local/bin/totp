@@ -436,7 +436,8 @@ def cmd_pick(args):
     choice = out.strip()
     if rc != 0 or not choice:
         return
-    p = decrypt(choice)  # touch prompt: yubikey-touch-detector shows it and closes it on touch
+    notify(f"Touch the YubiKey for {choice}")
+    p = decrypt(choice)
     code = totp(p)
     if remaining(p) < 5:  # about to expire: wait for the next one
         time.sleep(remaining(p)); code = totp(p)
