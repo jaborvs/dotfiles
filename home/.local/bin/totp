@@ -135,10 +135,24 @@ _lock_fd = None
 _child = None  # running rofi/age, in its own process group so the whole tree (age + plugin) can be killed
 
 
+def mako_mode(flag):
+    """Toggle mako's `totp` mode (-a/-r). Hides yubikey-touch-detector's prompt while totp shows its own;
+    a no-op without mako."""
+    if not shutil.which("makoctl"):
+        return
+    if flag == "-r":  # the detector closes its prompt a moment after the touch: leave the mode after that
+        deadline = time.monotonic() + 1
+        while time.monotonic() < deadline and "yubikey-touch-detector" in subprocess.run(
+                ["makoctl", "list"], capture_output=True, text=True).stdout:
+            time.sleep(0.05)
+    subprocess.run(["makoctl", "mode", flag, "totp"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
 def _on_cancel(signum, frame):
     """A newer request took over: drop our pending key request silently."""
     if _child and _child.poll() is None:
         os.killpg(_child.pid, signal.SIGTERM)
+    mako_mode("-r")  # os._exit skips the finally in decrypt
     os._exit(0)
 
 
@@ -437,7 +451,11 @@ def cmd_pick(args):
     if rc != 0 or not choice:
         return
     notify(f"Touch the YubiKey for {choice}")
-    p = decrypt(choice)
+    mako_mode("-a")  # our prompt replaces the detector's
+    try:
+        p = decrypt(choice)
+    finally:
+        mako_mode("-r")
     code = totp(p)
     if remaining(p) < 5:  # about to expire: wait for the next one
         time.sleep(remaining(p)); code = totp(p)
