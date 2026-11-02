@@ -1,7 +1,7 @@
 #!/bin/bash
 # Calendar reminder helper for mako.
 #   on-notify (Chrome)  -> track each new Chrome notification:
-#     * replace it every second with "hace MM:SS" (same id, no duplicates)
+#     * replace it every second with "MM:SS ago" (same id, no duplicates)
 #     * left click = dismiss (tracking ends); right click = snooze (see snooze.sh):
 #       the tracker re-sends it critical after the snooze and keeps counting
 #     * stop at END seconds (event start)
@@ -26,7 +26,7 @@ chrome_list() {
 
 exists() { makoctl list | grep -q "^Notification $1:"; }
 
-fmt() { printf 'hace %02d:%02d' $(($1 / 60)) $(($1 % 60)); }
+fmt() { printf '%02d:%02d ago' $(($1 / 60)) $(($1 % 60)); }
 
 send() { # id summary elapsed urgency -> prints id
     notify-send -a "$APP" -p ${1:+-r "$1"} -u "$4" "$2" "$(fmt "$3")"

@@ -65,7 +65,7 @@ def parse_uri(text):
     if text.startswith("otpauth://"):
         u = urllib.parse.urlparse(text)
         if u.netloc != "totp":
-            raise ValueError(f"solo TOTP, no {u.netloc}")
+            raise ValueError(f"only TOTP is supported, not {u.netloc}")
         q = {k: v[0] for k, v in urllib.parse.parse_qs(u.query).items()}
     else:
         q = {"secret": text}
@@ -77,18 +77,18 @@ def parse_uri(text):
         "algorithm": q.get("algorithm", "SHA1").upper(),
     }
     if p["algorithm"] not in ("SHA1", "SHA256", "SHA512"):
-        raise ValueError(f"algoritmo no soportado: {p['algorithm']}")
+        raise ValueError(f"unsupported algorithm: {p['algorithm']}")
     try:
         totp(p)  # validates the secret
     except (base64.binascii.Error, ValueError) as e:
-        raise ValueError(f"secreto base32 no válido ({e})") from None
+        raise ValueError(f"invalid base32 secret ({e})") from None
     return text, p
 
 
 def totp(p, now=None):
     key = base64.b32decode(p["secret"] + "=" * (-len(p["secret"]) % 8), casefold=True)
     if not key:
-        raise ValueError("secreto vacío")
+        raise ValueError("empty secret")
     counter = int((time.time() if now is None else now) // p["period"])
     mac = hmac.new(key, struct.pack(">Q", counter), getattr(hashlib, p["algorithm"].lower())).digest()
     off = mac[-1] & 0x0F
@@ -107,7 +107,7 @@ def safe_name(name):
     name = re.sub(r"\s+", "-", name.strip().lower())
     name = re.sub(r"-*:-*", ":", re.sub(r"-{2,}", "-", re.sub(r"[^\w.@:+-]", "-", name))).strip(".-:")
     if not name:
-        raise ValueError("nombre vacío")
+        raise ValueError("empty name")
     return name
 
 
@@ -121,7 +121,7 @@ def names():
 
 def encrypt(name, uri, force=False):
     if not RECIPIENT.exists():
-        die("falta `totp init`")
+        die("run `totp init` first")
     dest = path_for(name)
     if dest.exists() and not force:
         raise FileExistsError(dest.name[:-4])
@@ -169,7 +169,7 @@ def key_lock():
             break
         except BlockingIOError:
             if time.monotonic() > deadline:
-                die("no se pudo cancelar la petición anterior a la YubiKey")
+                die("could not cancel the previous YubiKey request")
             try:
                 os.kill(int(os.pread(fd, 32, 0).decode() or 0), signal.SIGTERM)
             except (ValueError, ProcessLookupError):
@@ -184,15 +184,15 @@ def key_lock():
 def decrypt(name):
     src = path_for(name)
     if not src.exists():
-        die(f"no existe la cuenta {name}")
+        die(f"no such account: {name}")
     key_lock()
     ident = ["-i", str(IDENTITY)] if IDENTITY.exists() else ["-j", "fido2-hmac"]
     rc, out, err = run_child(["age", "-d", *ident, str(src)])
     if rc != 0:
         if "operation denied" in err or "pin required" in err:
-            die("la YubiKey ha rechazado la huella. Si falla siempre, está bloqueada por intentos fallidos:"
-                " desbloquéala con el PIN (chrome://settings/securityKeys → Huellas digitales)")
-        die("no se pudo descifrar (¿llave conectada y tocada a tiempo?)\n" + err.strip())
+            die("the YubiKey rejected the fingerprint. If it keeps failing, it is locked after too many attempts:"
+                " unlock it with the PIN (chrome://settings/securityKeys → Fingerprints)")
+        die("could not decrypt (key plugged in and touched in time?)\n" + err.strip())
     return parse_uri(out)[1]
 
 
@@ -240,10 +240,10 @@ def parse_migration(uri):
             if key:
                 f[key] = x.decode() if key in ("name", "issuer") else x
         if f["type"] != 2:
-            print(f"  omitida (no es TOTP): {f['issuer']} {f['name']}", file=sys.stderr)
+            print(f"  skipped (not TOTP): {f['issuer']} {f['name']}", file=sys.stderr)
             continue
         if f["algorithm"] not in algos:
-            print(f"  omitida (algoritmo no soportado): {f['issuer']} {f['name']}", file=sys.stderr)
+            print(f"  skipped (unsupported algorithm): {f['issuer']} {f['name']}", file=sys.stderr)
             continue
         secret = base64.b32encode(f["secret"]).decode().rstrip("=")
         digits = 8 if f["digits"] == 2 else 6
@@ -259,35 +259,35 @@ def parse_migration(uri):
 
 def cmd_init():
     if RECIPIENT.exists():
-        die(f"ya inicializado ({RECIPIENT}); bórralo a mano si quieres empezar de cero")
+        die(f"already initialized ({RECIPIENT}); delete it by hand to start over")
     if not sys.stdin.isatty():
-        die("`totp init` es interactivo: ejecútalo en una terminal")
-    print("Conecta la YubiKey. Recomendado: PIN para descifrar = no; identidad separada = no.\n")
+        die("`totp init` is interactive: run it in a terminal")
+    print("Plug in the YubiKey. Recommended: PIN to decrypt = no; separate identity = no.\n")
     r = subprocess.run(["age-plugin-fido2-hmac", "-g"], stdout=subprocess.PIPE, text=True)
     if r.returncode != 0:
-        die("age-plugin-fido2-hmac -g falló")
+        die("age-plugin-fido2-hmac -g failed")
     pub = re.search(r"^# public key: (\S+)", r.stdout, re.M)
     ident = [l for l in r.stdout.splitlines() if l.startswith("AGE-PLUGIN-FIDO2-HMAC-")]
     recip = pub.group(1) if pub else next((l for l in r.stdout.splitlines() if l.startswith("age1")), None)
     if not recip:
-        die("no encuentro el recipient en la salida:\n" + r.stdout)
+        die("recipient not found in the output:\n" + r.stdout)
     CONF.mkdir(parents=True, exist_ok=True, mode=0o700)
     RECIPIENT.write_text(recip + "\n")
     if ident:
         IDENTITY.write_text("\n".join(ident) + "\n"); IDENTITY.chmod(0o600)
-    print(f"\nListo. Recipient en {RECIPIENT}" + (f", identidad en {IDENTITY}" if ident else ""))
+    print(f"\nDone. Recipient in {RECIPIENT}" + (f", identity in {IDENTITY}" if ident else ""))
 
 
 def cmd_add(args):
     force = "--force" in args
     args = [a for a in args if a != "--force"]
     if not args:
-        die("uso: totp add NAME [URI|SECRET] [--force]")
+        die("usage: totp add NAME [URI|SECRET] [--force]")
     name = args[0]
-    raw = args[1] if len(args) > 1 else (getpass.getpass("URI otpauth:// o secreto: ") if sys.stdin.isatty() else sys.stdin.read())
+    raw = args[1] if len(args) > 1 else (getpass.getpass("otpauth:// URI or secret: ") if sys.stdin.isatty() else sys.stdin.read())
     uri, p = parse_uri(raw)
     encrypt(name, uri, force)
-    print(f"añadida: {safe_name(name)}")
+    print(f"added: {safe_name(name)}")
 
 
 def cameras():
@@ -305,12 +305,12 @@ def choose_camera(dev):
         return dev
     cams = cameras()
     if not cams:
-        die("no encuentro ninguna webcam")
+        die("no webcam found")
     if len(cams) == 1 or not sys.stdin.isatty():
         return cams[0][0]
     for n, (path, name) in enumerate(cams, 1):
         print(f"  {n}) {name} ({path})", file=sys.stderr)
-    pick = input(f"¿Qué webcam? [1-{len(cams)}]: ").strip() or "1"
+    pick = input(f"Which webcam? [1-{len(cams)}]: ").strip() or "1"
     return cams[int(pick) - 1][0]
 
 
@@ -353,13 +353,13 @@ def scan_qr(images, dev):
     if images:
         r = subprocess.run(["zbarimg", "--raw", "-q", *images], capture_output=True, text=True)
         if not r.stdout.strip():
-            print("no se ha detectado ningún QR en las imágenes", file=sys.stderr)
+            print("no QR code found in the images", file=sys.stderr)
         yield from r.stdout.splitlines()
         return
     dev = choose_camera(dev)
-    print(f"Usando {dev}. Se abre una ventana con la imagen de la cámara. La exposición va cambiando sola"
-          " (la imagen se oscurece y aclara): deja cada QR quieto unos 10 s hasta que aparezca «leído»."
-          " Cierra la ventana o pulsa Ctrl+C cuando acabes.", file=sys.stderr)
+    print(f"Using {dev}. A window opens with the camera image. The exposure cycles on its own"
+          " (the image darkens and brightens): hold each QR still for about 10 s until \"read\" shows up."
+          " Close the window or press Ctrl+C when done.", file=sys.stderr)
     proc = subprocess.Popen(["zbarcam", "--raw", "-q", dev], stdout=subprocess.PIPE, text=True)
     stop = threading.Event()
     sweeper = threading.Thread(target=exposure_sweep, args=(dev, stop), daemon=True)
@@ -383,7 +383,7 @@ def cmd_import_google(args):
     images = args
     for tool in ("zbarimg",) if images else ("zbarcam",):
         if not shutil.which(tool):
-            die("falta zbar-tools: sudo apt install zbar-tools")
+            die("zbar-tools missing: sudo apt install zbar-tools")
     seen, added = set(), 0
     for line in scan_qr(images, dev):
         line = line.strip()
@@ -391,9 +391,9 @@ def cmd_import_google(args):
             continue
         seen.add(line)
         if not line.startswith("otpauth-migration://"):
-            print(f"  QR leído, pero no es una exportación de Google Authenticator: {line[:40]}…", file=sys.stderr)
+            print(f"  QR read, but it is not a Google Authenticator export: {line[:40]}…", file=sys.stderr)
             continue
-        print(f"  QR leído ({len(seen)})", file=sys.stderr)
+        print(f"  QR read ({len(seen)})", file=sys.stderr)
         for issuer, account, uri in parse_migration(line):
             # Menu name is the issuer ("ubuntu-one"); issuer-account only if that issuer is already taken.
             candidates = [issuer, f"{issuer}-{account}"] if issuer else [account]
@@ -401,18 +401,18 @@ def cmd_import_google(args):
                 try:
                     encrypt(name, uri)
                     added += 1
-                    print(f"  añadida: {safe_name(name)}", file=sys.stderr)
+                    print(f"  added: {safe_name(name)}", file=sys.stderr)
                     break
                 except FileExistsError:
                     continue
             else:
-                print(f"  ya existía: {safe_name(candidates[-1])}", file=sys.stderr)
-    print(f"{added} cuentas importadas de {len(seen)} QR", file=sys.stderr)
+                print(f"  already exists: {safe_name(candidates[-1])}", file=sys.stderr)
+    print(f"{added} accounts imported from {len(seen)} QR codes", file=sys.stderr)
 
 
 def cmd_code(args):
     if not args:
-        die("uso: totp code NAME")
+        die("usage: totp code NAME")
     p = decrypt(args[0])
     print(totp(p))
 
@@ -430,31 +430,30 @@ def cmd_pick(args):
     key_lock()
     accounts = names()
     if not accounts:
-        die("no hay cuentas; usa `totp add` o `totp import-google`")
+        die("no accounts; use `totp add` or `totp import-google`")
     menu = "".join(f"{n}\0icon\x1f{icon_for(n)}\n" for n in accounts)
     rc, out, _ = run_child(["rofi", "-dmenu", "-i", "-show-icons", "-p", PROMPT], stdin=menu)
     choice = out.strip()
     if rc != 0 or not choice:
         return
-    notify(f"Toca la YubiKey para {choice}")
-    p = decrypt(choice)
+    p = decrypt(choice)  # touch prompt: yubikey-touch-detector shows it and closes it on touch
     code = totp(p)
     if remaining(p) < 5:  # about to expire: wait for the next one
         time.sleep(remaining(p)); code = totp(p)
     if "--type" in args and shutil.which("wtype"):
         subprocess.run(["wtype", code], check=False)
-        notify(f"{choice}: código escrito")
+        notify(f"{choice}: code typed")
     else:
         subprocess.run(["wl-copy", code], check=True)
         clear_clipboard_later(code)
-        notify(f"{choice}: código copiado (válido {remaining(p)} s, se borra del portapapeles en {CLIP_CLEAR_SECS} s)")
+        notify(f"{choice}: code copied (valid {remaining(p)} s, cleared from the clipboard in {CLIP_CLEAR_SECS} s)")
 
 
 def cmd_rm(args):
     if not args:
-        die("uso: totp rm NAME")
+        die("usage: totp rm NAME")
     path_for(args[0]).unlink()
-    print(f"borrada: {safe_name(args[0])}")
+    print(f"deleted: {safe_name(args[0])}")
 
 
 def main(argv):
@@ -474,7 +473,7 @@ def main(argv):
         elif cmd == "rm": cmd_rm(args)
         else: print(__doc__); sys.exit(0 if cmd in ("-h", "--help", "help") else 2)
     except FileExistsError as e:
-        die(f"ya existe {e}; usa --force para sobrescribir")
+        die(f"{e} already exists; use --force to overwrite")
     except ValueError as e:
         die(str(e))
 

@@ -75,8 +75,8 @@ if [ "$mode" = "deps" ] || [ "$mode" = "all" ]; then
         # Audio and devices
         pipewire pipewire-bin pipewire-pulse wireplumber libspa-0.2-bluetooth libpulse0
         pavucontrol v4l-utils bluez blueman upower lm-sensors network-manager
-        # totp (age + YubiKey, QR import)
-        age zbar-tools
+        # totp (age + YubiKey, QR import) and touch prompts for any FIDO use
+        age zbar-tools yubikey-touch-detector
         # Shell and tools
         zsh zoxide fzf vim btop ncdu sqlite3 shellcheck
         git curl wget unzip flatpak
@@ -396,12 +396,13 @@ if [ "$mode" = "deploy" ] || [ "$mode" = "all" ]; then
         echo "WARNING: no session bus; rerun option 2 from a graphical session to apply the GTK theme."
     fi
 
-    # --- User services (Snowball mic filter chain) ---
+    # --- User services (Snowball mic filter chain, YubiKey touch prompt) ---
+    USER_SERVICES=(filter-chain.service yubikey-touch-detector.service)
     if systemctl --user daemon-reload 2>/dev/null; then
-        systemctl --user enable --now filter-chain.service
-        echo "    Enabled filter-chain.service"
+        systemctl --user enable --now "${USER_SERVICES[@]}"
+        echo "    Enabled ${USER_SERVICES[*]}"
     else
-        echo "WARNING: no systemd user session; run 'systemctl --user enable --now filter-chain.service' after login."
+        echo "WARNING: no systemd user session; run 'systemctl --user enable --now ${USER_SERVICES[*]}' after login."
     fi
 
     echo ">>> Dotfiles deployed."
