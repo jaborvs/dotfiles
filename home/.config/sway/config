@@ -94,5 +94,10 @@ exec_always "killall -q xdg-desktop-portal-wlr xdg-desktop-portal-gtk xdg-deskto
 # mako (notification)
 exec_always pkill mako; mako
 
+# yubikey-touch-detector (touch prompts): it starts with the systemd user session, before logind
+# grants this user the key's /dev/hidraw ACL, and never retries a key it couldn't open. Restart it
+# once the graphical session is up.
+exec systemctl --user restart yubikey-touch-detector.service
+
 # kanshi (displays)
 exec_always pkill kanshi; kanshi
